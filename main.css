@@ -1,0 +1,75 @@
+body {
+    background-color: black;
+    /*Prevents problem with padding of navbar*/
+    padding-top: 80px; 
+    color: white;
+
+}
+
+/*Prevents problem with padding and navbar on mobile devices*/
+@media screen and (max-width: 768px) {
+  body { padding-top: 0px; }
+}
+
+.navbar-custom {
+  background-color: bisque;
+}
+
+.navbar-custom h1 a, .navbar-custom a {
+  color:black
+}
+
+.icon-green {
+  color: bisque;
+}
+  h1 {
+    font-family: 'Trebuchet MS', Helvetica, sans-serif;
+    color: bisque;
+    font-weight: bold;
+  }
+  
+  header {
+    font-family: 'Trebuchet MS', Helvetica, sans-serif;
+    color: bisque;
+    background-color: bisque;
+    font-weight: bold;
+  }
+  h2 {
+    font-family: 'Trebuchet MS', Helvetica, sans-serif;
+    color:bisque;
+    
+  }
+
+  h3 {
+    font-family: 'Trebuchet MS', Helvetica, sans-serif;
+    color:bisque;
+    
+  }
+  
+  
+  p {
+    font-family: 'Trebuchet MS', Helvetica, sans-serif;
+  }
+  
+  
+  a {
+    color:bisque;
+    text-decoration: none;
+  }
+  
+  .box {
+    height: 200px;
+  }
+  
+  img {
+    height: 100%;
+  }
+  
+  .center {
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  
+  
