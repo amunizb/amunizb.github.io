@@ -1,15 +1,11 @@
 body {
     background-color: black;
     /*Prevents problem with padding of navbar*/
-    padding-top: 80px; 
+    padding-top: 120px; 
     color: white;
 
 }
 
-/*Prevents problem with padding and navbar on mobile devices*/
-@media screen and (max-width: 768px) {
-  body { padding-top: 0px; }
-}
 
 .navbar-custom {
   background-color: bisque;
