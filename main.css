@@ -1,25 +1,29 @@
 body {
     background-color: black;
+
     /*Prevents problem with padding of navbar*/
     padding-top: 120px; 
+
     color: white;
 
 }
 
 .container {
+  /* Makes page compact on wide screens*/
     max-width: 1000px!important;
 }
-.navbar-custom {
+
+.bg-custom {
   background-color: bisque;
 }
 
-.navbar-custom h1 a, .navbar-custom a {
-  color:black
+nav h1 {
+  font-family: 'Trebuchet MS', Helvetica, sans-serif;
+  color: black;
+  font-weight: bold;
 }
 
-.icon-green {
-  color: bisque;
-}
+
   h1 {
     font-family: 'Trebuchet MS', Helvetica, sans-serif;
     color: bisque;
@@ -28,17 +32,12 @@ body {
   
   header {
     font-family: 'Trebuchet MS', Helvetica, sans-serif;
-    color: bisque;
+    color: black;
     background-color: bisque;
     font-weight: bold;
   }
-  h2 {
-    font-family: 'Trebuchet MS', Helvetica, sans-serif;
-    color:bisque;
-    
-  }
 
-  h3 {
+  h2, h3 {
     font-family: 'Trebuchet MS', Helvetica, sans-serif;
     color:bisque;
     
@@ -55,9 +54,7 @@ body {
     text-decoration: none;
   }
   
-  .box {
-    height: 200px;
-  }
+
   
   img {
     height: 100%;
