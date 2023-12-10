@@ -10,7 +10,7 @@ body {
 
 .container {
   /* Makes page compact on wide screens*/
-    max-width: 1000px!important;
+    max-width: 900px!important;
 }
 
 .bg-custom {
