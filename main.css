@@ -66,5 +66,10 @@ nav h1 {
     margin-right: auto;
   }
 
+div {
+    text-align: justify;
+    text-justify: inter-word;
+  }
+
   
   
