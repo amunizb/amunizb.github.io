@@ -5,113 +5,137 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Random Number Game</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      display: flex;
-      flex-direction: row;
-      height: 100vh;
-      margin: 0;
-      overflow: hidden;
-    }
-    .reset-button {
-      position: absolute;
-      top: 10px;
-      right: 20px;
-      padding: 10px 20px;
-      background-color: #f44336;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      font-size: 1em;
-      cursor: pointer;
-    }
-    .reset-button:hover {
-      background-color: #d32f2f;
-    }
-    .left-section {
-      width: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      border-right: 2px solid gray;
-      padding: 20px;
-    }
-    .game-container {
-      text-align: center;
-      max-width: 500px;
-    }
-    .number-display {
-      font-size: 3em;
-      margin: 20px 0;
-    }
-    .buttons {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-    }
-    .button {
-      padding: 10px 20px;
-      font-size: 1.2em;
-      cursor: pointer;
-      border: none;
-      border-radius: 5px;
-    }
-    .take {
-      background-color: green;
-      color: white;
-    }
-    .next {
-      background-color: red;
-      color: white;
-    }
-    .next:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-    .info {
-      font-size: 1.2em;
-      margin: 10px 0;
-    }
-    .right-section {
-      width: 50%;
-      display: flex;
-      flex-direction: column;
-      padding: 20px;
-      overflow-y: auto;
-    }
-    .scoreboard {
-      margin-bottom: 20px;
-    }
-    .board-list {
-      list-style-type: none;
-      padding: 0;
-    }
-    .board-list li {
-      margin: 5px 0;
-    }
-    .plots-container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 15px;
-    }
-    .plot {
-      flex: 0 0 calc(33% - 10px);
-      box-sizing: border-box;
-    }
-    .plot canvas {
-      width: 100%;
-      height: auto;
-    }
+  body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+  margin: 0;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+  overflow-y: auto;   /* Allow vertical scrolling */
+}
 
-    /* Media queries for mobile responsiveness */
+.reset-button {
+  position: fixed;
+  top: 10px;
+  right: 20px;
+  padding: 10px 20px;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1em;
+  cursor: pointer;
+  z-index: 1000; /* Make sure the button is on top */
+}
+
+.reset-button:hover {
+  background-color: #d32f2f;
+}
+
+.left-section {
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-right: 2px solid gray;
+  padding: 20px;
+  overflow: hidden;
+}
+
+.game-container {
+  text-align: center;
+  max-width: 500px;
+  width: 100%;
+}
+
+.number-display {
+  font-size: 3em;
+  margin: 20px 0;
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.button {
+  padding: 10px 20px;
+  font-size: 1.2em;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+}
+
+.take {
+  background-color: green;
+  color: white;
+}
+
+.next {
+  background-color: red;
+  color: white;
+}
+
+.next:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.info {
+  font-size: 1.2em;
+  margin: 10px 0;
+}
+
+.right-section {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.scoreboard {
+  margin-bottom: 20px;
+}
+
+.board-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.board-list li {
+  margin: 5px 0;
+}
+
+.plots-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.plot {
+  flex: 0 0 calc(33% - 10px);
+  box-sizing: border-box;
+}
+
+.plot canvas {
+  width: 100%;
+  height: auto;
+}
+
+/* Media queries for mobile responsiveness */
 @media (max-width: 768px) {
   body {
     flex-direction: column;
+    height: auto;
   }
 
   .left-section, .right-section {
     width: 100%;
     padding: 10px;
+    box-sizing: border-box;
   }
 
   .number-display {
@@ -145,6 +169,7 @@
 
   .plots-container {
     flex-direction: column;
+    gap: 10px;
   }
 
   .plot {
