@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Random Number Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: row;
+      height: 100vh;
+      margin: 0;
+      overflow: hidden;
+    }
+    .left-section {
+      width: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-right: 2px solid gray;
+      padding: 20px;
+    }
+    .game-container {
+      text-align: center;
+      max-width: 500px;
+    }
+    .number-display {
+      font-size: 3em;
+      margin: 20px 0;
+    }
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+    .button {
+      padding: 10px 20px;
+      font-size: 1.2em;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+    }
+    .take {
+      background-color: green;
+      color: white;
+    }
+    .next {
+      background-color: red;
+      color: white;
+    }
+    .next:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .info {
+      font-size: 1.2em;
+      margin: 10px 0;
+    }
+    .right-section {
+      width: 50%;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+      overflow-y: auto;
+    }
+    .scoreboard {
+      margin-bottom: 20px;
+    }
+    .board-list {
+      list-style-type: none;
+      padding: 0;
+    }
+    .board-list li {
+      margin: 5px 0;
+    }
+    .plots-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    .plot {
+      flex: 0 0 calc(33% - 10px);
+      box-sizing: border-box;
+    }
+    .plot canvas {
+      width: 100%;
+      height: auto;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="left-section">
+    <div class="game-container">
+      <canvas id="current-plot" width="400" height="300"></canvas>
+      <div class="number-display" id="number-display">0</div>
+      <div class="info" id="info-display">You have 5 offers left</div>
+      <div class="buttons">
+        <button class="button take" id="take-button">Take</button>
+        <button class="button next" id="next-button">Next</button>
+      </div>
+      <p id="result" style="font-size: 1.5em; margin-top: 30px;"></p>
+    </div>
+  </div>
+  <div class="right-section">
+    <div class="scoreboard">
+      <h2>Scoreboard</h2>
+      <ul class="board-list" id="board-list"></ul>
+      <p><strong>Mean:</strong> <span id="mean-display">0.00</span></p>
+    </div>
+    <div class="plots-container" id="saved-plots"></div>
+  </div>
+
+  <script>
+    const a = 1; // Lower bound of uniform distribution
+    const b = 100; // Upper bound of uniform distribution
+    const maxRounds = 5; // Maximum number of rounds
+    let count = 0; // Current round
+    let currentNumber = 0;
+    let offers = []; // List of offers in the current game
+    let numbersTaken = []; // List of numbers taken
+
+    const numberDisplay = document.getElementById('number-display');
+    const takeButton = document.getElementById('take-button');
+    const nextButton = document.getElementById('next-button');
+    const resultDisplay = document.getElementById('result');
+    const infoDisplay = document.getElementById('info-display');
+    const savedPlotsContainer = document.getElementById('saved-plots');
+    const currentPlotCanvas = document.getElementById('current-plot');
+    const boardList = document.getElementById('board-list');
+    const meanDisplay = document.getElementById('mean-display');
+
+    let currentPlot; // Chart.js instance for the current game plot
+
+    function getRandomNumber() {
+      return (Math.random() * (b - a) + a).toFixed(2); // Generate a number with 2 decimal places
+    }
+
+    function nextNumber() {
+      if (count === 0) {
+        offers = []; // Reset offers at the start of a new game
+      }
+      count++;
+      currentNumber = parseFloat(getRandomNumber());
+      offers.push(currentNumber);
+
+      // Update the plot with the new offer
+      updateCurrentPlot();
+
+      numberDisplay.textContent = currentNumber;
+      infoDisplay.textContent = `You have ${maxRounds - count} offers after this one`;
+
+      if (count === maxRounds) {
+        nextButton.disabled = true; // Disable Next button on last round
+        resultDisplay.textContent = "Final round! You must take this offer.";
+      }
+    }
+
+    function resetGame() {
+      count = 0;
+      offers = [];
+      nextButton.disabled = false;
+      takeButton.disabled = false;
+      resultDisplay.textContent = '';
+      
+
+      initializeCurrentPlot(); // Start a fresh blank plot for the new game
+
+      nextNumber();
+    }
+
+    function endGame(action) {
+      resultDisplay.textContent = `You ${action} the number: ${currentNumber}`;
+      takeButton.disabled = true;
+      nextButton.disabled = true;
+
+      // Save the current plot with a red marker for the taken number
+      savePlot();
+
+      // Add the number to the scoreboard
+      numbersTaken.push(currentNumber);
+      updateScoreboard();
+
+      // Reset the game after a short delay
+      setTimeout(resetGame, 1500);
+    }
+
+    function updateScoreboard() {
+      // Update the list of numbers taken
+      const listItem = document.createElement('li');
+      listItem.textContent = currentNumber;
+      boardList.appendChild(listItem);
+
+      // Update the mean display
+      const mean = (numbersTaken.reduce((sum, num) => sum + num, 0) / numbersTaken.length).toFixed(2);
+      meanDisplay.textContent = mean;
+    }
+
+    function initializeCurrentPlot() {
+      if (currentPlot) currentPlot.destroy(); // Clear the old plot
+      currentPlot = new Chart(currentPlotCanvas, {
+        type: 'line',
+        data: {
+          labels: [], // X-axis labels (rounds)
+          datasets: [{
+            label: 'Offers',
+            data: [], // Y-axis data (offers)
+            borderColor: 'blue',
+            backgroundColor: 'rgba(0, 0, 255, 0.2)',
+            pointRadius: 5,
+            pointHoverRadius: 7,
+          }],
+        },
+        options: {
+          responsive: true,
+          scales: {
+            x: { title: { display: true, text: 'Round' } },
+            y: { title: { display: true, text: 'Offer Value' } },
+          },
+        },
+      });
+    }
+
+    function updateCurrentPlot() {
+      currentPlot.data.labels.push(count); // Add round number
+      currentPlot.data.datasets[0].data.push(currentNumber); // Add offer value
+      currentPlot.update();
+    }
+
+    function savePlot() {
+      const plotContainer = document.createElement('div');
+      plotContainer.classList.add('plot');
+
+      const plotCanvas = document.createElement('canvas');
+      plotCanvas.width = 200; // Smaller size for saved plots
+      plotCanvas.height = 150;
+
+      plotContainer.appendChild(plotCanvas);
+
+      const ctx = plotCanvas.getContext('2d');
+      const savedPlot = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: [...currentPlot.data.labels], // Copy labels (rounds)
+          datasets: [{
+            label: 'Offers',
+            data: [...currentPlot.data.datasets[0].data], // Copy offers
+            borderColor: 'blue',
+            backgroundColor: 'rgba(0, 0, 255, 0.2)',
+            pointRadius: 5,
+            pointHoverRadius: 7,
+          }],
+        },
+        options: {
+          responsive: false,
+        },
+      });
+
+      // Add red marker for taken offer
+      savedPlot.data.datasets.push({
+        type: 'scatter',
+        label: 'Taken Offer',
+        data: [{ x: count, y: currentNumber }],
+        backgroundColor: 'red',
+        pointRadius: 7,
+      });
+      savedPlot.update();
+
+      savedPlotsContainer.appendChild(plotContainer);
+    }
+
+    // Initialize the game
+    initializeCurrentPlot();
+    nextNumber(); // Show the first number
+
+    // Event listeners
+    takeButton.addEventListener('click', () => endGame('took'));
+    nextButton.addEventListener('click', nextNumber);
+  </script>
+</body>
+</html>
