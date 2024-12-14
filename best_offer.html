@@ -13,6 +13,21 @@
       margin: 0;
       overflow: hidden;
     }
+    .reset-button {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      padding: 10px 20px;
+      background-color: #f44336;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 1em;
+      cursor: pointer;
+    }
+    .reset-button:hover {
+      background-color: #d32f2f;
+    }
     .left-section {
       width: 50%;
       display: flex;
@@ -87,10 +102,61 @@
       width: 100%;
       height: auto;
     }
+
+    /* Media queries for mobile responsiveness */
+@media (max-width: 768px) {
+  body {
+    flex-direction: column;
+  }
+
+  .left-section, .right-section {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .number-display {
+    font-size: 2.5em;
+  }
+
+  .buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .button {
+    font-size: 1.5em;
+    padding: 15px 30px;
+  }
+
+  .reset-button {
+    font-size: 1.2em;
+    top: 20px;
+    right: 20px;
+    padding: 12px 24px;
+  }
+
+  .game-container {
+    width: 100%;
+  }
+
+  .scoreboard {
+    font-size: 1.1em;
+  }
+
+  .plots-container {
+    flex-direction: column;
+  }
+
+  .plot {
+    flex: 0 0 100%;
+    margin-bottom: 15px;
+  }
+}
   </style>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
+    <button class="reset-button" onclick="location.reload()">Reset Game</button>
   <div class="left-section">
     <div class="game-container">
       <canvas id="current-plot" width="400" height="300"></canvas>
@@ -113,9 +179,9 @@
   </div>
 
   <script>
-    const a = 1; // Lower bound of uniform distribution
-    const b = 100; // Upper bound of uniform distribution
-    const maxRounds = 5; // Maximum number of rounds
+    const a = 250; // Lower bound of uniform distribution
+    const b = 750; // Upper bound of uniform distribution
+    const maxRounds = 14; // Maximum number of rounds
     let count = 0; // Current round
     let currentNumber = 0;
     let offers = []; // List of offers in the current game
@@ -134,7 +200,7 @@
     let currentPlot; // Chart.js instance for the current game plot
 
     function getRandomNumber() {
-      return (Math.random() * (b - a) + a).toFixed(2); // Generate a number with 2 decimal places
+      return (Math.random() * (b - a) + a).toFixed(0); // Generate a number with 2 decimal places
     }
 
     function nextNumber() {
