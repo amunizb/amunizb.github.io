@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>St. Petersburg Paradox</title>
+<style>
+    body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+        background: #111;
+        color: #f5f5f5;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+
+    .container {
+        text-align: center;
+    }
+
+    .coin {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        margin: 20px auto;
+        background: linear-gradient(145deg, gold, goldenrod);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        font-weight: bold;
+        color: #111;
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        perspective: 800px;
+    }
+
+    /* Keyframe for forward-only spin */
+    @keyframes spin {
+        from { transform: rotateY(0deg); }
+        to   { transform: rotateY(720deg); }
+    }
+
+    .spin {
+        animation: spin 1.2s ease forwards;
+    }
+
+    .prize {
+        font-size: 36px;
+        margin-top: 20px;
+        transition: transform 0.6s ease, color 0.6s ease;
+    }
+
+    .double {
+        transform: scale(1.25);
+        color: #00ff88;
+    }
+
+    .final {
+        color: #ff5555;
+        margin-top: 30px;
+        font-size: 28px;
+        animation: pulse 1.4s infinite;
+    }
+
+    @keyframes pulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.5; }
+        100% { opacity: 1; }
+    }
+
+    button {
+        margin-top: 30px;
+        padding: 10px 20px;
+        font-size: 16px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        background: #444;
+        color: white;
+    }
+
+    button:hover {
+        background: #666;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>St. Petersburg Paradox</h1>
+
+    <div id="coin" class="coin">?</div>
+    <div id="prize" class="prize">€2</div>
+    <div id="result"></div>
+
+    <button onclick="startGame()">Start game</button>
+</div>
+
+<script>
+let prize;
+let gameRunning = false;
+let nextTossTimeout = null;
+
+function startGame() {
+    prize = 2;
+    gameRunning = true;
+
+    document.getElementById("prize").textContent = "€2";
+    document.getElementById("result").textContent = "";
+    document.getElementById("coin").textContent = "?";
+
+    // start the first toss
+    toss();
+}
+
+function toss() {
+    if (!gameRunning) return;
+
+    const coin = document.getElementById("coin");
+    const prizeEl = document.getElementById("prize");
+    const resultEl = document.getElementById("result");
+
+    // Remove any previous spin class instantly
+    coin.classList.remove("spin");
+    void coin.offsetWidth; // force reflow
+
+    // Start spin animation
+    coin.classList.add("spin");
+
+    // Reveal result after animation
+    setTimeout(() => {
+        const isHeads = Math.random() < 0.5;
+
+        if (isHeads) {
+            coin.textContent = "H";
+            prize *= 2;
+            prizeEl.textContent = "€" + prize;
+            prizeEl.classList.add("double");
+
+            setTimeout(() => prizeEl.classList.remove("double"), 500);
+
+            // Short pause before next toss
+            nextTossTimeout = setTimeout(toss, 800);
+        } else {
+            coin.textContent = "T";
+            gameRunning = false;
+
+            // Cancel any pending next toss
+            clearTimeout(nextTossTimeout);
+
+            resultEl.textContent = "This is your prize";
+            resultEl.className = "final";
+        }
+    }, 1200); // matches spin duration
+}
+</script>
+
+</body>
+</html>
