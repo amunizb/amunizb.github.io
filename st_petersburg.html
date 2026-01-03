@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>St. Petersburg Paradox</title>
+<title>St. Petersburg Lottery</title>
 <style>
     body {
         font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
@@ -91,7 +91,7 @@
     <h1>St. Petersburg Paradox</h1>
 
     <div id="coin" class="coin">?</div>
-    <div id="prize" class="prize">€2</div>
+    <div id="prize" class="prize">2€</div>
     <div id="result"></div>
 
     <button onclick="startGame()">Start game</button>
@@ -106,7 +106,7 @@ function startGame() {
     prize = 2;
     gameRunning = true;
 
-    document.getElementById("prize").textContent = "€2";
+    document.getElementById("prize").textContent = "2€";
     document.getElementById("result").textContent = "";
     document.getElementById("coin").textContent = "?";
 
@@ -135,7 +135,7 @@ function toss() {
         if (isHeads) {
             coin.textContent = "H";
             prize *= 2;
-            prizeEl.textContent = "€" + prize;
+            prizeEl.textContent = prize + "€";
             prizeEl.classList.add("double");
 
             setTimeout(() => prizeEl.classList.remove("double"), 500);
